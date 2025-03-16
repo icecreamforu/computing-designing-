@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生产排程系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo" width="30" height="30" class="d-inline-block align-text-top me-2">
+                生产排程系统
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/scheduling">首页</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            文件
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="openFileBtn">打开</a></li>
+                            <li><a class="dropdown-item" href="#">保存</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            工单管理
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" id="addWorkOrderBtn">添加工单</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="lockSchedulingBtn">锁排程</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="resourceChangeBtn">资源变更</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user_manual">使用手册</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容 -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧菜单 -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <h6 class="sidebar-header">系统菜单</h6>
+                    <ul class="nav flex-column sidebar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-target="system-page">
+                                <i class="bi bi-gear me-2"></i>系统管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-target="process-page">
+                                <i class="bi bi-diagram-3 me-2"></i>工艺模型
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-target="resource-page">
+                                <i class="bi bi-box me-2"></i>资源模型
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-target="gantt-page">
+                                <i class="bi bi-bar-chart-steps me-2"></i>智能排程
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <h6 class="sidebar-header mt-4">我的收藏</h6>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-target="resource-page">
+                                <i class="bi bi-star me-2"></i>资源管理
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-target="gantt-page">
+                                <i class="bi bi-star me-2"></i>甘特图
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <!-- 右侧内容 -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">SSP生产排程系统</h1>
+                </div>
+
+                <!-- 系统管理页面 -->
+                <div id="system-page" class="content-page" style="display: none;">
+                    <div class="content-card">
+                        <h3 class="card-title">系统管理</h3>
+                        <p>系统管理功能区域，包含系统设置、用户管理等功能。</p>
+                    </div>
+                </div>
+
+                <!-- 工艺模型页面 -->
+                <div id="process-page" class="content-page" style="display: none;">
+                    <div class="content-card">
+                        <h3 class="card-title">工艺模型</h3>
+                        <p>工艺模型功能区域，包含工艺路线、工序管理等功能。</p>
+                    </div>
+                </div>
+
+                <!-- 资源模型页面 -->
+                <div id="resource-page" class="content-page">
+                    <div class="content-card">
+                        <h3 class="card-title">资源模型</h3>
+                        
+                        <div class="form-group resource-selector">
+                            <label for="resource-selector" class="form-label">选择资源</label>
+                            <select class="form-select" id="resource-selector">
+                                {% for resource in resources %}
+                                <option value="{{ resource.id }}">{{ resource.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="resource-id" class="form-label">资源编号</label>
+                                    <input type="text" class="form-control" id="resource-id" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="resource-name" class="form-label">资源名称</label>
+                                    <input type="text" class="form-control" id="resource-name" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="resource-category" class="form-label">资源分类</label>
+                                    <input type="text" class="form-control" id="resource-category" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="resource-quantity" class="form-label">资源数量</label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="resource-quantity" readonly>
+                                        <button class="btn btn-outline-secondary" type="button" id="change-resource-btn">修改</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="start-date" class="form-label">开始日期</label>
+                                    <input type="text" class="form-control" id="start-date" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="end-date" class="form-label">结束日期</label>
+                                    <input type="text" class="form-control" id="end-date" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="start-time" class="form-label">开始时间</label>
+                                    <input type="text" class="form-control" id="start-time" readonly>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="end-time" class="form-label">结束时间</label>
+                                    <input type="text" class="form-control" id="end-time" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group resource-form-group">
+                                    <label for="priority" class="form-label">优先级</label>
+                                    <input type="text" class="form-control" id="priority" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>资源图片</h4>
+                            <div id="resource-images" class="resource-images">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">加载中...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 甘特图页面 -->
+                <div id="gantt-page" class="content-page" style="display: none;">
+                    <div class="content-card">
+                        <h3 class="card-title">智能排程</h3>
+                        <p>点击以下按钮查看详细甘特图：</p>
+                        <a href="/gantt" class="btn btn-primary">查看甘特图</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/resource.js') }}"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 工单添加按钮点击事件
+            const addWorkOrderBtn = document.getElementById('addWorkOrderBtn');
+            if (addWorkOrderBtn) {
+                addWorkOrderBtn.addEventListener('click', function() {
+                    showAddWorkOrderDialog();
+                });
+            }
+            
+            // 锁排程按钮点击事件
+            const lockSchedulingBtn = document.getElementById('lockSchedulingBtn');
+            if (lockSchedulingBtn) {
+                lockSchedulingBtn.addEventListener('click', function() {
+                    showLockSchedulingDialog();
+                });
+            }
+            
+            // 资源变更按钮在resource.js中已处理
+        });
+    </script>
+</body>
+</html>

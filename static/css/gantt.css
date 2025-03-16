@@ -1,0 +1,138 @@
+/* 甘特图专用样式 */
+.gantt-chart {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 30px;
+}
+
+.gantt-row {
+    display: flex;
+    height: 40px;
+    margin-bottom: 5px;
+    align-items: center;
+}
+
+.gantt-row-header {
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 15px;
+    font-weight: bold;
+}
+
+.gantt-row-bars {
+    flex-grow: 1;
+    position: relative;
+    background-color: #f0f0f0;
+    height: 100%;
+}
+
+.gantt-bar {
+    position: absolute;
+    height: 30px;
+    border-radius: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.gantt-bar:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.gantt-timeline {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 10px;
+    height: 50px;
+}
+
+.gantt-day {
+    flex: 1;
+    text-align: center;
+    font-size: 12px;
+    padding-top: 5px;
+    border-right: 1px solid #eee;
+}
+
+.gantt-day-header {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.gantt-tooltip {
+    position: absolute;
+    background-color: #34495e;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+}
+
+/* 数据表格样式 */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.data-table th {
+    background-color: #34495e;
+    color: white;
+    padding: 15px 8px;
+    text-align: center;
+    font-size: 14px;
+    position: sticky;
+    top: 0;
+    min-height: 45px;
+}
+
+.data-table tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+.data-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #e9ecef;
+    text-align: center;
+}
+
+.data-table tr:hover {
+    background-color: #e9ecef;
+}
+
+/* 图例样式 */
+.gantt-legend {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px 0;
+    gap: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border-radius: 3px;
+}
